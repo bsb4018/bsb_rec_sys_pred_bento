@@ -1,0 +1,16 @@
+service: "service:svc_interest"
+include:
+  - "model.py"
+  - "service.py"
+  - "connections.py"
+  - "constants.py"
+  - "utils.py"
+  - "exception.py"
+  - "logger.py"
+python:
+  packages:
+    - "numpy"
+    - "pandas"
+    - "dill"
+    - "pymongo"
+    - "from-root"

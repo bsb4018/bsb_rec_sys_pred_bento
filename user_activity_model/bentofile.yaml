@@ -1,0 +1,18 @@
+service: "service:svc_activity"
+include:
+  - "model.py"
+  - "service.py"
+  - "connections.py"
+  - "constants.py"
+  - "utils.py"
+  - "exception.py"
+  - "logger.py"
+python:
+  packages:
+    - "numpy"
+    - "pandas"
+    - "feast"
+    - "dill"
+    - "from-root"
+    - "boto3"
+    - "implicit"

@@ -1,0 +1,10 @@
+dill
+feast==0.23.0
+bentoml
+pandas
+numpy
+from-root
+boto3
+pymongo
+implicit
+-e .
