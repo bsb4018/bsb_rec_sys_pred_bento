@@ -1,18 +1,19 @@
 import os,sys
 from typing import List
-from user_activity_model.utils import load_object
-from user_activity_model.constants import PRODUCTION_MODEL_FILE_PATH,INTERACTIONS_MATRIX_FILE_PATH,INTERACTIONS_MODEL_FILE_PATH
+from utils import load_object
+from constants import PRODUCTION_MODEL_FILE_PATH,INTERACTIONS_MATRIX_FILE_PATH,INTERACTIONS_MODEL_FILE_PATH,FEATURE_STORE_FILE_PATH
 from feast import FeatureStore
 import pandas as pd
-from user_activity_model.exception import PredictionException
+from exception import PredictionException
 import bentoml
-from user_activity_model.connections import StorageConnection
+from connections import StorageConnection
 
 def recommend_by_similar_user_activity(item_dict) -> List[str]:
     try:
         #load model from artifact
         storage_connection = StorageConnection()
         storage_connection.download_production_model_s3()
+        storage_connection.get_feature_store_s3()
         timestamps = list(map(int, os.listdir(PRODUCTION_MODEL_FILE_PATH)))
         latest_timestamp = max(timestamps)
         latest_production_interaction_model = os.path.join(PRODUCTION_MODEL_FILE_PATH, f"{latest_timestamp}", INTERACTIONS_MODEL_FILE_PATH)
@@ -27,7 +28,7 @@ def recommend_by_similar_user_activity(item_dict) -> List[str]:
         ids, scores = interaction_model.recommend(user_id, interaction_matrix[user_id], N=5, filter_already_liked_items=False)
         cidx = ids.tolist()
 
-        store = FeatureStore(repo_path="D:/work2/course_recommend_app/cr_data_collection/rec_sys_fs")
+        store = FeatureStore(repo_path=FEATURE_STORE_FILE_PATH)
         course_data = store.get_online_features(features = \
             ["courses_df_feature_view:course_id",\
                 "courses_df_feature_view:course_name"],

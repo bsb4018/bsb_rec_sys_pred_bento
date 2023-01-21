@@ -7,4 +7,5 @@ from-root
 boto3
 pymongo
 implicit
+bentoctl
 -e .

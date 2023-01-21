@@ -14,3 +14,4 @@ python:
     - "dill"
     - "pymongo"
     - "from-root"
+    - "pydantic"
