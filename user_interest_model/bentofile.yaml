@@ -15,8 +15,3 @@ python:
     - "pymongo"
     - "from-root"
     - "pydantic"
-monitoring:
-  enabled: true
-  type: default
-  options:
-    log_path: logs/interest-logs

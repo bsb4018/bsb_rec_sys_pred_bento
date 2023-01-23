@@ -1,9 +1,10 @@
 from typing import List
-import sys
+import os,sys
 import random
 from connections import MongoDBClient
 from exception import PredictionException
 import bentoml
+from constants import AWS_ACCESS_KEY_ID_ENV_KEY,AWS_ACCESS_KEY_ID_ENV_KEY,S3_MODEL_STORE_BUCKET
 
 def _find_courses_interest(tag: str):
     try:
@@ -83,6 +84,14 @@ def save_interest_model_bento():
                 recommend_by_similar_interest, \
                     signatures={"__call__": {"batchable": True}})
             print(f"Interest Model saved: {saved_model_courses}")
+
+            bentoml.models.export_model('recommender_interest:latest', 'bentoStore')
+            aws_user = os.getenv(AWS_ACCESS_KEY_ID_ENV_KEY)
+            aws_secret = os.getenv(AWS_ACCESS_KEY_ID_ENV_KEY)
+            aws_bento_store_bucket = S3_MODEL_STORE_BUCKET
+            bentoml.models.export_model('recommender_interest:latest', aws_bento_store_bucket, protocol='s3', \
+                subpath='interest-model',user=aws_user, passwd=aws_secret,\
+                    params={'acl': 'public-read', 'cache-control': 'max-age=2592000,public'})
         
         except Exception as e:
             raise PredictionException(e,sys)

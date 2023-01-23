@@ -1,7 +1,7 @@
 import os,sys
 from typing import List
 from utils import load_object
-from constants import PRODUCTION_MODEL_FILE_PATH,INTERACTIONS_MATRIX_FILE_PATH,INTERACTIONS_MODEL_FILE_PATH,FEATURE_STORE_FILE_PATH
+from constants import PRODUCTION_MODEL_FILE_PATH,INTERACTIONS_MATRIX_FILE_PATH,INTERACTIONS_MODEL_FILE_PATH,FEATURE_STORE_FILE_PATH,AWS_ACCESS_KEY_ID_ENV_KEY,AWS_ACCESS_KEY_ID_ENV_KEY,S3_MODEL_STORE_BUCKET
 from feast import FeatureStore
 import pandas as pd
 from exception import PredictionException
@@ -74,6 +74,15 @@ def save_activity_model_bento():
                 signatures={"__call__": {"batchable": True}}
             )
         print(f"Activity Model saved: {saved_model_interactions}")
+
+        bentoml.models.export_model('recommender_interest:latest', 'bentoStore')
+        aws_user = os.getenv(AWS_ACCESS_KEY_ID_ENV_KEY)
+        aws_secret = os.getenv(AWS_ACCESS_KEY_ID_ENV_KEY)
+        aws_bento_store_bucket = S3_MODEL_STORE_BUCKET
+        bentoml.models.export_model('recommender_interest:latest', aws_bento_store_bucket, protocol='s3', \
+            subpath='activity-model',user=aws_user, passwd=aws_secret,\
+                params={'acl': 'public-read', 'cache-control': 'max-age=2592000,public'})
+
     except Exception as e:
         raise PredictionException(e,sys)
 

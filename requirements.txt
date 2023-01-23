@@ -8,4 +8,5 @@ boto3
 pymongo
 implicit
 bentoctl
+bentoml[aws]
 -e .
