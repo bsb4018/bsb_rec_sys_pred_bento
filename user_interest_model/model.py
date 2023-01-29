@@ -85,13 +85,13 @@ def save_interest_model_bento():
                     signatures={"__call__": {"batchable": True}})
             print(f"Interest Model saved: {saved_model_courses}")
 
-            bentoml.models.export_model('recommender_interest:latest', 'bentoStore')
-            aws_user = os.getenv(AWS_ACCESS_KEY_ID_ENV_KEY)
-            aws_secret = os.getenv(AWS_ACCESS_KEY_ID_ENV_KEY)
-            aws_bento_store_bucket = S3_MODEL_STORE_BUCKET
-            bentoml.models.export_model('recommender_interest:latest', aws_bento_store_bucket, protocol='s3', \
-                subpath='interest-model',user=aws_user, passwd=aws_secret,\
-                    params={'acl': 'public-read', 'cache-control': 'max-age=2592000,public'})
+            #bentoml.models.export_model('recommender_interest:latest', 'bentoStore')
+            #aws_user = os.getenv(AWS_ACCESS_KEY_ID_ENV_KEY)
+            #aws_secret = os.getenv(AWS_ACCESS_KEY_ID_ENV_KEY)
+            #aws_bento_store_bucket = S3_MODEL_STORE_BUCKET
+            #bentoml.models.export_model('recommender_interest:latest', aws_bento_store_bucket, protocol='s3', \
+            #    subpath='interest-model',user=aws_user, passwd=aws_secret,\
+            #        params={'acl': 'public-read', 'cache-control': 'max-age=2592000,public'})
         
         except Exception as e:
             raise PredictionException(e,sys)
